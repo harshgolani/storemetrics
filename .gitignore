@@ -1,6 +1,38 @@
+# Data files
 data/
-.DS_Store
 *.csv
 *.zip
-.vscode/
+*.json
+
+# Python
 __pycache__/
+*.py[cod]
+*.pyo
+.Python
+*.egg-info/
+dist/
+build/
+.eggs/
+
+# Virtual environments
+.env
+.venv
+env/
+venv/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Jupyter
+.ipynb_checkpoints/
+notebooks/.ipynb_checkpoints/
+
+# Streamlit
+.streamlit/
