@@ -75,3 +75,26 @@ def order_frequency_distribution(orders):
         'stats': distribution,
         'buckets': bucket_counts
     }
+
+def peak_ordering_times(orders):
+    """
+    Analyze when customers place orders.
+    By hour of day and day of week.
+    """
+    hourly = orders.groupby('order_hour_of_day').size().reset_index()
+    hourly.columns = ['hour', 'order_count']
+    hourly['pct'] = round(hourly['order_count'] / len(orders) * 100, 2)
+
+    daily = orders.groupby('order_dow').size().reset_index()
+    daily.columns = ['day', 'order_count']
+    daily['pct'] = round(daily['order_count'] / len(orders) * 100, 2)
+
+    # Map day numbers to names
+    day_map = {0: 'Sunday', 1: 'Monday', 2: 'Tuesday',
+               3: 'Wednesday', 4: 'Thursday', 5: 'Friday', 6: 'Saturday'}
+    daily['day_name'] = daily['day'].map(day_map)
+
+    return {
+        'hourly': hourly,
+        'daily': daily
+    }

@@ -38,3 +38,12 @@
 - Minimum 4 orders per user — light users not represented
 - days_since_prior_order capped at 30 — long-gap reorders appear as 30 days
 - All findings should be interpreted as "behavior among repeat customers" not all customers
+
+## Peak Ordering Times
+- Peak hours: 10am-3pm — lunch break planning behavior
+- Peak days: Sunday/Monday at 17.56% and 17.17% — weekly planning cycle
+- Slowest days: Wednesday/Thursday — mid-week lull, users already stocked
+- Hypothesis: Sunday = home meal planning, Monday = office restocking
+- Cannot confirm home vs office split without delivery address data
+- Future analysis: compare product categories by day to test the hypothesis
+- Business implication: personalized notifications based on each user's individual peak ordering time outperforms broadcast Sunday morning push — requires per-user order history analysis
