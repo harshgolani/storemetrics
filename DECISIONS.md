@@ -47,3 +47,13 @@
 - Cannot confirm home vs office split without delivery address data
 - Future analysis: compare product categories by day to test the hypothesis
 - Business implication: personalized notifications based on each user's individual peak ordering time outperforms broadcast Sunday morning push — requires per-user order history analysis
+
+## A/B Test Simulation
+- Split users into morning (6am-12pm) and evening (5pm-11pm) shoppers
+- Morning: 107,109 users vs Evening: 32,319 users — morning dominates 3:1
+- Morning avg basket: 10.0 items vs Evening: 9.93 items
+- p_value: 2.68e-09 — statistically significant
+- practical_significance: False — 0.07 item difference too small to act on
+- Key insight: statistical significance does not equal practical significance
+- With 32M order lines even tiny differences appear significant
+- Recommendation: analyze revenue per order instead of basket size for actionable insights

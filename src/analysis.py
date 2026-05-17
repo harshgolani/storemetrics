@@ -98,3 +98,55 @@ def peak_ordering_times(orders):
         'hourly': hourly,
         'daily': daily
     }
+
+def ab_test_basket_size(orders, prior):
+    """
+    A/B test simulation: morning vs evening shoppers.
+    Tests whether basket size differs significantly between groups.
+    Group A: users who predominantly order 6am-12pm
+    Group B: users who predominantly order 5pm-11pm
+    Uses two-sample t-test. p < 0.05 = statistically significant.
+    """
+    # Classify each user as morning or evening based on their most common order hour
+    user_peak_hour = orders.groupby('user_id')['order_hour_of_day'].agg(
+        lambda x: x.mode()[0]
+    ).reset_index()
+    user_peak_hour.columns = ['user_id', 'peak_hour']
+
+    morning_users = user_peak_hour[
+        user_peak_hour['peak_hour'].between(6, 12)
+    ]['user_id']
+
+    evening_users = user_peak_hour[
+        user_peak_hour['peak_hour'].between(17, 23)
+    ]['user_id']
+
+    # Calculate basket size per order
+    basket_size = prior.groupby('order_id')['product_id'].count().reset_index()
+    basket_size.columns = ['order_id', 'basket_size']
+
+    # Merge with orders to get user_id
+    orders_with_basket = orders[['order_id', 'user_id']].merge(basket_size, on='order_id')
+
+    # Get basket sizes for each group
+    morning_baskets = orders_with_basket[
+        orders_with_basket['user_id'].isin(morning_users)
+    ]['basket_size']
+
+    evening_baskets = orders_with_basket[
+        orders_with_basket['user_id'].isin(evening_users)
+    ]['basket_size']
+
+    # Run t-test
+    t_stat, p_value = stats.ttest_ind(morning_baskets, evening_baskets)
+
+    return {
+    'morning_users': len(morning_users),
+    'evening_users': len(evening_users),
+    'morning_avg_basket': round(float(morning_baskets.mean()), 2),
+    'evening_avg_basket': round(float(evening_baskets.mean()), 2),
+    't_statistic': round(float(t_stat), 4),
+    'p_value': float(p_value),
+    'significant': bool(p_value < 0.05),
+    'practical_significance': abs(float(morning_baskets.mean()) - float(evening_baskets.mean())) > 1.0
+    }
