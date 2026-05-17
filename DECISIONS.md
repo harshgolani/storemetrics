@@ -25,3 +25,16 @@
 - Personal care lowest at 32% — likely channel switching, not brand switching
   Users use Instacart for groceries, other platforms (Amazon, Target) for personal care
 - Finding: reorder rate reflects how grocery-native the category is
+
+## Order Frequency Distribution
+- Used max(order_number) per user as proxy for total orders
+- Median user places 10 orders — habitual shoppers not one-time buyers
+- Dataset min is 4 orders — light users excluded, skews distribution upward
+- Largest bucket 6-10 orders at 29.55% — target for retention programs
+- Power users (51-100 orders) represent 5.29% — loyalty program candidates
+
+## Dataset Limitations
+- Excludes one-time buyers — all retention and frequency metrics are overstated
+- Minimum 4 orders per user — light users not represented
+- days_since_prior_order capped at 30 — long-gap reorders appear as 30 days
+- All findings should be interpreted as "behavior among repeat customers" not all customers

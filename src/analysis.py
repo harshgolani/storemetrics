@@ -51,3 +51,27 @@ def reorder_rate_by_department(prior, products, departments):
 
     return dept_stats.sort_values('reorder_rate', ascending=False)
 
+def order_frequency_distribution(orders):
+    """
+    Distribution of total orders per user.
+    Shows whether users are occasional or habitual shoppers.
+    """
+    orders_per_user = orders.groupby('user_id')['order_number'].max().reset_index()
+    orders_per_user.columns = ['user_id', 'total_orders']
+
+    distribution = orders_per_user['total_orders'].describe()
+
+    buckets = pd.cut(
+        orders_per_user['total_orders'],
+        bins=[0, 5, 10, 20, 50, 100],
+        labels=['1-5', '6-10', '11-20', '21-50', '51-100']
+    )
+
+    bucket_counts = buckets.value_counts().sort_index().reset_index()
+    bucket_counts.columns = ['order_range', 'user_count']
+    bucket_counts['pct'] = round(bucket_counts['user_count'] / len(orders_per_user) * 100, 2)
+
+    return {
+        'stats': distribution,
+        'buckets': bucket_counts
+    }
