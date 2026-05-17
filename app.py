@@ -1,13 +1,7 @@
+import json
+import pandas as pd
 import streamlit as st # type: ignore
 
-from src.data_loader import load_data
-from src.analysis import (
-    cohort_retention,
-    reorder_rate_by_department,
-    order_frequency_distribution,
-    peak_ordering_times,
-    ab_test_basket_size,
-)
 from src.charts import (
     chart_reorder_frequency,
     chart_reorder_by_department,
@@ -166,20 +160,20 @@ def insight_panel(finding, why, recommendation):
 """
 
 
-@st.cache_data(show_spinner="Loading data - this takes a moment on first run…")
-def cached_load_data():
-    return load_data()
+def load_precomputed():
+    with open('assets/precomputed.json', 'r') as f:
+        data = json.load(f)
+    return (
+        data['retention'],
+        pd.DataFrame(data['dept_data']),
+        {'stats': None, 'buckets': pd.DataFrame(data['freq_data']['buckets'])},
+        {'hourly': pd.DataFrame(data['time_data']['hourly']), 'daily': pd.DataFrame(data['time_data']['daily'])},
+        data['ab_data']
+    )
 
 
-# ── Load data ─────────────────────────────────────────────────────────────────
-orders, prior, train, products, departments, aisles = cached_load_data()
-
-# ── Run all analyses ──────────────────────────────────────────────────────────
-retention = cohort_retention(orders)
-dept_data = reorder_rate_by_department(prior, products, departments)
-freq_data = order_frequency_distribution(orders)
-time_data = peak_ordering_times(orders)
-ab_data   = ab_test_basket_size(orders, prior)
+# ── Load precomputed data ─────────────────────────────────────────────────────
+retention, dept_data, freq_data, time_data, ab_data = load_precomputed()
 
 median   = retention["median_days_between_orders"]
 top_day  = time_data["daily"].sort_values("order_count", ascending=False).iloc[0]["day_name"]
