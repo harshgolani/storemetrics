@@ -1,6 +1,5 @@
-import pandas as pd
-import numpy as np
-from scipy import stats
+import pandas as pd # type: ignore
+from scipy import stats # type: ignore
 
 def cohort_retention(orders):
     """
@@ -141,12 +140,12 @@ def ab_test_basket_size(orders, prior):
     t_stat, p_value = stats.ttest_ind(morning_baskets, evening_baskets)
 
     return {
-    'morning_users': len(morning_users),
-    'evening_users': len(evening_users),
-    'morning_avg_basket': round(float(morning_baskets.mean()), 2),
-    'evening_avg_basket': round(float(evening_baskets.mean()), 2),
-    't_statistic': round(float(t_stat), 4),
-    'p_value': float(p_value),
-    'significant': bool(p_value < 0.05),
-    'practical_significance': abs(float(morning_baskets.mean()) - float(evening_baskets.mean())) > 1.0
+        'morning_users': len(morning_users),
+        'evening_users': len(evening_users),
+        'morning_avg_basket': round(float(morning_baskets.mean()), 2),
+        'evening_avg_basket': round(float(evening_baskets.mean()), 2),
+        't_statistic': round(float(t_stat), 4),
+        'p_value': float(p_value),
+        'significant': bool(p_value < 0.05),
+        'practical_significance': abs(float(morning_baskets.mean()) - float(evening_baskets.mean())) > 1.0
     }
