@@ -29,3 +29,25 @@ def cohort_retention(orders):
         'reorder_within_28_days_pct': round(d28 / total_users * 100, 2),
         'median_days_between_orders': median_days
     }
+
+def reorder_rate_by_department(prior, products, departments):
+    """
+    Calculate reorder rate per department.
+    Reorder rate = % of order lines that are reorders vs first time purchases.
+    """
+    # Merge prior orders with product and department info
+    merged = prior.merge(products[['product_id', 'department_id']], on='product_id')
+    merged = merged.merge(departments, on='department_id')
+
+    # Calculate reorder rate per department
+    dept_stats = merged.groupby('department').agg(
+        total_orders=('reordered', 'count'),
+        total_reorders=('reordered', 'sum')
+    ).reset_index()
+
+    dept_stats['reorder_rate'] = round(
+        dept_stats['total_reorders'] / dept_stats['total_orders'] * 100, 2
+    )
+
+    return dept_stats.sort_values('reorder_rate', ascending=False)
+
