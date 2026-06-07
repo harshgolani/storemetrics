@@ -3,6 +3,7 @@
 E-commerce analytics dashboard built on the Instacart Market Basket Analysis dataset (3.4M orders, 206K users).
 
 **Live Demo:** https://storemetrics.streamlit.app
+**Tableau Dashboard:** https://public.tableau.com/views/InstacartCustomerBehaviorDashboard/Dashboard
 
 ---
 
@@ -18,7 +19,7 @@ Five analyses, each with a structured Finding / Why It Matters / Recommendation:
 
 ## Stack
 
-Python · Pandas · Plotly · Streamlit · SciPy
+Python · Pandas · Plotly · Streamlit · SciPy · Tableau
 
 ## Key decisions
 
@@ -26,6 +27,7 @@ Python · Pandas · Plotly · Streamlit · SciPy
 - Dataset excludes one-time buyers — all frequency and retention metrics reflect repeat customers only
 - Dtype optimization reduces the prior orders file from ~1GB to ~309MB in memory
 - Analysis is pre-computed from the full dataset and served as static JSON for fast load times on Streamlit Cloud
+- Tableau dashboard built from exported CSVs via `scripts/tableau_export.py` — same analysis, interactive Tableau Public visualization
 
 ## Run locally
 
@@ -38,4 +40,9 @@ To regenerate precomputed analysis from raw data:
 ```bash
 # Download Instacart dataset from Kaggle into data/raw/
 python3 scripts/precompute.py
+```
+
+To regenerate Tableau export CSVs:
+```bash
+python3 scripts/tableau_export.py
 ```
